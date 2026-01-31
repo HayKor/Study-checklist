@@ -68,11 +68,7 @@ fun CourseEditingLayout(
     ) { paddingValues ->
 
         LessonsList(
-            lessons = draft.lessons.map { it.name },
-            errorSet = draft.lessons
-                .mapIndexed { index, lesson -> if (lesson.isError) index else null}
-                .filterNotNull()
-                .toSet(),
+            lessons = draft.lessons,
             onChangeLessonName = onChangeLessonName,
             onAddLesson = onAddLesson,
             onDeleteLesson = onDeleteLesson,
@@ -145,8 +141,7 @@ private fun AppBar(
 
 @Composable
 private fun LessonsList(
-    lessons: List<String>,
-    errorSet: Set<Int>,
+    lessons: List<LessonDraft>,
     onAddLesson: () -> Unit,
     onChangeLessonName: (index: Int, value: String) -> Unit,
     onDeleteLesson: (index: Int) -> Unit,
@@ -170,8 +165,8 @@ private fun LessonsList(
         itemsIndexed(lessons) { index, lesson ->
             LessonItem(
                 modifier = Modifier.fillMaxWidth(),
-                lessonName = lesson,
-                isError = index in errorSet,
+                lessonName = lesson.name,
+                isError = lesson.isError,
                 onChangeLessonName = { value -> onChangeLessonName(index, value) },
                 onDeleteLesson = { onDeleteLesson(index) }
             )
